@@ -1,8 +1,13 @@
 from typing import Any
 import asyncio
 import httpx
+import logging
 import os
 from mcp.server.fastmcp import FastMCP
+
+# WeatherAPI authenticates in the query string; keep request URLs (and the key)
+# out of FastMCP's INFO-level terminal output.
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 # Initialize FastMCP server
 port = int(os.getenv("PORT", 8085))

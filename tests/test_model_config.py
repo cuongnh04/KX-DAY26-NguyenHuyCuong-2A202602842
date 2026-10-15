@@ -24,6 +24,18 @@ class ModelConfigTest(unittest.TestCase):
         self.assertEqual(assigned_string(function_calling, "MODEL"), "gemini-3.8-flash")
         self.assertIn('model="gemini-3.8-flash"', agent.read_text(encoding="utf-8"))
 
+    def test_verifier_does_not_print_api_key_characters(self) -> None:
+        verifier = ROOT / "04-lab" / "mcp-client" / "verify_setup.py"
+        source = verifier.read_text(encoding="utf-8")
+
+        self.assertNotIn("api_key[:", source)
+
+    def test_weather_server_suppresses_httpx_request_urls(self) -> None:
+        server = ROOT / "04-lab" / "mcp-server" / "weather.py"
+        source = server.read_text(encoding="utf-8")
+
+        self.assertIn('logging.getLogger("httpx").setLevel(logging.WARNING)', source)
+
 
 if __name__ == "__main__":
     unittest.main()
